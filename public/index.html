@@ -16,10 +16,22 @@
   .square {
     width: 25px;
     height: 25px;
+    background: gainsboro;
     color: cornflowerblue;
-    border: 2px solid gainsboro;
     display: inline-block;
     vertical-align: middle;
+    text-align: center;
+    border-top: 3px solid lightgray;
+    border-right: 3px solid gray;
+    border-bottom: 3px solid gray;
+    border-left: 3px solid lightgray;
+  }
+
+  .square.revealed {
+    border-top: 3px solid silver;
+    border-right: 3px solid silver;
+    border-bottom: 3px solid silver;
+    border-left: 3px solid silver;
   }
 
   .container {

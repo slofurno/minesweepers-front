@@ -7,7 +7,7 @@ import thunk from 'redux-thunk'
 
 import rootReducer from 'modules/index'
 const store = createStore(rootReducer, applyMiddleware(thunk))
-store.subscribe(() => console.log(store.getState()))
+//store.subscribe(() => console.log(store.getState()))
 
 import App from 'containers/app'
 import { updateBoard } from 'modules/board'

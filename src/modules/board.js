@@ -47,15 +47,16 @@ export function updateBoard(squares) {
   }
 }
 
-export function squareClicked(pos) {
+export function squareClicked(pos, e) {
+  e.preventDefault()
+  const right = e.button > 0
   return (dispatch, getState) => {
     const { socket } = getState()
-    socket.send(JSON.stringify({type: 'click', pos, right: false}))
+    socket.send(JSON.stringify({type: 'click', pos, right}))
   }
 }
 
 function squares(state = initial, action) {
-  console.log("squares")
   switch(action.type) {
   case 'BOARD_UPDATE':
     return action.squares.reduce((a, c) => ({
