@@ -12,14 +12,14 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 import App from 'containers/app'
 import { updateBoard } from 'modules/board'
 
-fetch("http://dev.snake.press/api/games")
+fetch(`http://${location.host}/api/games`)
   .then(res => res.json())
   .then(xs => connect(xs[0]))
   .catch(err => console.error(err))
 
 function connect(game) {
   let state = {}
-  let socket = new WebSocket(`ws://dev.snake.press/ws?gameid=${game}&token=123`)
+  let socket = new WebSocket(`ws:///${location.host}/ws?gameid=${game}&token=123`)
   store.dispatch({type: 'SOCKET_CONNECTED', socket})
   socket.onmessage = e => update(JSON.parse(e.data))
 }
