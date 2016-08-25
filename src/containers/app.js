@@ -31,20 +31,41 @@ const Square = ({neighbors, onClick, type, revealed, flagged}) => {
 
 class App extends Component {
 
+
   render() {
+  const HEIGHT = 400
+  const WIDTH = 400
     const { board, squareClicked } = this.props
+    const { panX, panY } = this.props
+    const cols = WIDTH / 40 | 0
+    const rows = HEIGHT / 40 | 0
+    const colOffset = panY / 40 | 0
+    const rowOffset = panX / 40 | 0
+
+    const xs = []
+    for (let j = colOffset; j < colOffset + cols; j++) {
+      for (let i = rowOffset; i < rowOffset + rows; i++) {
+        xs.push([i,j])
+      }
+    }
+
+    console.log(xs)
+
+   const boardStyle = {
+     width: WIDTH,
+     height: HEIGHT
+   }
 
     return (
-      <div className="container">
-        { false &&
-          keys.map((pos,i) => {
-            const props = board.squares[pos]
+      <div className="container" style={boardStyle}>
+        {
+          xs.map((pos,i) => {
+            const square = board.squares[pos]
             return (
-              <Square key={i} {...props} onClick={e => squareClicked(pos, e)} />
+              <Square key={i} {...square} onClick={e => squareClicked(pos, e)} />
             )
           })
         }
-      <PannableSquare/>
       </div>
     )
   }
@@ -64,13 +85,7 @@ class DebugSquare extends Component {
     const set = msg => [this.setState({msg})]
 
     return (
-      <div style={{width: 400, height: 400, background: 'gainsboro', position: 'relative'}}
-        onClick={ e => set('onclick')}
-        onMouseDown={ e => set('mousedown')}
-        onMouseUp={ e => set('mouseup')}
-        onMouseMove={ e => set('mousemove: ' + e.clientX + ',' + e.clientY)}
-        onTouchMove={ e => [e.preventDefault(), set('touchmove: ' + e.touches[0].pageX + ', ' +  e.touches[0].pageY)]}
-      >
+      <div style={{width: 400, height: 400, background: 'gainsboro', position: 'relative'}} >
         <div style={{position: 'absolute', left: 200-panX, top: 200-panY, width: 10, height: 10, background: 'blue' }}>
         {"height: " + window.innerHeight + "  " + window.innerWidth}
         </div>
@@ -86,4 +101,4 @@ function mapStateToProps(state, ownProps) {
   return state
 }
 
-export default connect(mapStateToProps, {squareClicked})(App)
+export default connect(mapStateToProps, {squareClicked})(makePannable(App))
