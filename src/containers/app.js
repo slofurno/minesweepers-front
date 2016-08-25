@@ -25,31 +25,28 @@ const Square = ({neighbors, onClick, type, revealed, flagged}) => {
   }
 
   return (
-    <div className={className} onClick={onClick} onContextMenu={preventDefault}>{content}</div>
+    <div className={className} onClick={onClick} onContextMenu={onClick}>{content}</div>
   )
 }
 
 class App extends Component {
-
-
   render() {
-  const HEIGHT = 400
-  const WIDTH = 400
-    const { board, squareClicked } = this.props
-    const { panX, panY } = this.props
-    const cols = WIDTH / 40 | 0
-    const rows = HEIGHT / 40 | 0
-    const colOffset = panY / 40 | 0
-    const rowOffset = panX / 40 | 0
+    const SIZE = 40
+    const HEIGHT = ((window.innerHeight - 80) / 40 | 0) * 40
+    const WIDTH = (window.innerWidth / 40 | 0) * 40
+    const { board, squareClicked, panX, panY } = this.props
+
+    const cols = WIDTH / SIZE | 0
+    const rows = HEIGHT / SIZE | 0
+    const j0 = panY / SIZE | 0
+    const i0 = panX / SIZE | 0
 
     const xs = []
-    for (let j = colOffset; j < colOffset + cols; j++) {
-      for (let i = rowOffset; i < rowOffset + rows; i++) {
+    for (let j = j0; j < j0 + rows; j++) {
+      for (let i = i0; i < i0 + cols; i++) {
         xs.push([i,j])
       }
     }
-
-    console.log(xs)
 
    const boardStyle = {
      width: WIDTH,
@@ -57,45 +54,21 @@ class App extends Component {
    }
 
     return (
-      <div className="container" style={boardStyle}>
-        {
-          xs.map((pos,i) => {
-            const square = board.squares[pos]
-            return (
-              <Square key={i} {...square} onClick={e => squareClicked(pos, e)} />
-            )
-          })
-        }
-      </div>
-    )
-  }
-}
-
-class DebugSquare extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      msg: ''
-    }
-  }
-
-  render() {
-    const { msg } = this.state
-    const {panX, panY} = this.props
-    const set = msg => [this.setState({msg})]
-
-    return (
-      <div style={{width: 400, height: 400, background: 'gainsboro', position: 'relative'}} >
-        <div style={{position: 'absolute', left: 200-panX, top: 200-panY, width: 10, height: 10, background: 'blue' }}>
-        {"height: " + window.innerHeight + "  " + window.innerWidth}
+      <div>
+        <div className="container" style={boardStyle}>
+          {
+            xs.map((pos,i) => {
+              const square = board.squares[pos]
+              return (
+                <Square key={pos} {...square} onClick={e => squareClicked(pos, e)} />
+              )
+            })
+          }
         </div>
       </div>
     )
   }
-
 }
-
-const PannableSquare = makePannable(DebugSquare)
 
 function mapStateToProps(state, ownProps) {
   return state

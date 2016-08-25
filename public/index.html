@@ -17,6 +17,8 @@
       box-sizing: inherit;
   }
   .square {
+    line-height:40px;
+    font-size: 30px;
     width: 40px;
     height: 40px;
     background: gainsboro;
@@ -24,21 +26,24 @@
     display: inline-block;
     vertical-align: middle;
     text-align: center;
-    border-top: 3px solid lightgray;
+    border-top: 3px solid whitesmoke;
     border-right: 3px solid gray;
     border-bottom: 3px solid gray;
-    border-left: 3px solid lightgray;
+    border-left: 3px solid whitesmoke;
   }
 
   .square.revealed {
-    border-top: 3px solid silver;
-    border-right: 3px solid silver;
-    border-bottom: 3px solid silver;
-    border-left: 3px solid silver;
+    background: whitesmoke;
+    border-top: 1px dotted gainsboro;
+    border-right: 1px dotted gainsboro;
+    border-bottom: 1px dotted gainsboro;
+    border-left: 1px dotted gainsboro;
   }
 
   .container {
-    width: 2500px;
+    width: 2000px;
+    user-select: none;
+    -webkit-user-select: none;
   }
 </style>
 </head>
