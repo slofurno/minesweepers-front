@@ -1,6 +1,7 @@
 var path = require('path');
+var webpack = require('webpack');
 
-module.exports = {
+var config = {
   entry: {
     bundle: './src/index'
   },
@@ -19,3 +20,17 @@ module.exports = {
     root: path.join(__dirname, 'src')
   }
 };
+
+if (process.env.NODE_ENV === 'production') {
+  config = Object.assign({}, config, {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': '"production"'
+        }
+      })
+    ]
+  })
+}
+
+module.exports = config

@@ -55,7 +55,6 @@ export default function makePannable(Inner) {
 
     render() {
       const { panX, panY } = this.state
-      console.log(panX, panY)
 
       return (
         <div

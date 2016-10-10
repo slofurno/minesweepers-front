@@ -47,13 +47,20 @@ export function updateBoard(squares) {
   }
 }
 
-export function squareClicked(pos, e) {
+function squareClick_(pos, right, e) {
   e.preventDefault()
-  const right = e.button > 0
   return (dispatch, getState) => {
     const { socket } = getState()
     socket.send(JSON.stringify({type: 'click', pos, right}))
   }
+}
+
+export function squareClick(pos, e) {
+  return squareClick_(pos, false, e);
+}
+
+export function squareRightClick(pos, e) {
+  return squareClick_(pos, true, e);
 }
 
 function squares(state = initial, action) {

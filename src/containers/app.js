@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { keys, squareClicked } from 'modules/board'
+import { keys, squareClick, squareRightClick } from 'modules/board'
 import makePannable from 'pannable'
 
 const BOMB = '💣'
@@ -72,26 +72,21 @@ const CanvasBoard = React.createClass({
 
 const back_ = document.createElement('canvas');
 const back = back_.getContext('2d');
-back.fillStyle = "gainsboro";
 const front_ = document.createElement('canvas');
 const front = front_.getContext('2d');
-front.fillStyle = "gainsboro";
-
-global.front = front_;
-global.back = back_
 
 class App extends Component {
   render() {
     const SIZE = 40
     const HEIGHT = (window.innerHeight / SIZE | 0) * SIZE
     const WIDTH = (window.innerWidth / SIZE | 0) * SIZE
-    const { board, squareClicked, panX, panY } = this.props
+    const { board, squareClick, squareRightClick, panX, panY } = this.props
 
     const cols = WIDTH / SIZE | 0
     const rows = HEIGHT / SIZE | 0
 
-    const j1 = panY / SIZE
-    const i1 = panX / SIZE
+    const jm = panY % SIZE
+    const im = panX % SIZE
 
     const j0 = panY / SIZE | 0
     const i0 = panX / SIZE | 0
@@ -99,49 +94,58 @@ class App extends Component {
     front_.width = cols * 40;
     front_.height = rows * 40;
 
-    back_.width = cols * 40;
-    back_.height = rows * 40;
-    const xs = []
+    back_.width = cols * 41;
+    back_.height = rows * 41;
 
     back.fillRect(0, 0, WIDTH, HEIGHT);
+    back.fillStyle = "whitesmoke";
 
-    for(let j = 0; j < rows; j++) {
-      for(let i = 0; i < cols ; i++) {
+    for(let j = 0; j < rows + 1; j++) {
+      for(let i = 0; i < cols + 1 ; i++) {
         drawSquare(back, i, j, board.squares[[i + i0, j + j0]])
-    //for (let j = j0; j < j0 + rows; j++) {
-    //  for (let i = i0; i < i0 + cols; i++) {
-        //xs.push([i,j])
       }
     }
 
     front.fillRect(0, 0, WIDTH, HEIGHT);
-    front.drawImage(back_, i1 - i0, j1 - j0);
-    front_.onclick = e => {
-      e.preventDefault()
-      const dx = panX + e.x
-      const dy = panY + e.y
+    front.drawImage(back_,-im, -jm);
+    const clickHandler = e => {
+      const dx = panX + e.nativeEvent.offsetX
+      const dy = panY + e.nativeEvent.offsetY
       const pos = [dx/SIZE|0, dy/SIZE|0]
-      console.log(pos)
-      squareClicked(pos, e)
+      if (pos[0] == this.lastPos[0] && pos[1] == this.lastPos[1]) {
+        squareClick(pos, e)
+      }
+      this.lastPos = pos;
     }
 
-   const boardStyle = {
-     width: WIDTH,
-     height: HEIGHT
-   }
+    const rightClickHandler = e => {
+      const dx = panX + e.nativeEvent.offsetX
+      const dy = panY + e.nativeEvent.offsetY
+      const pos = [dx/SIZE|0, dy/SIZE|0]
+      squareRightClick(pos, e)
+    }
 
-    /*
-            xs.map((pos,i) => {
-              const square = board.squares[pos]
-              return (
-                <Square key={pos} {...square} onClick={e => squareClicked(pos, e)} />
-              )
-            })
-    */
+    const mouseDown = e => {
+      const dx = panX + e.nativeEvent.offsetX
+      const dy = panY + e.nativeEvent.offsetY
+      const pos = [dx/SIZE|0, dy/SIZE|0]
+      this.lastPos = pos;
+    }
+
+    const boardStyle = {
+      width: WIDTH,
+      height: HEIGHT
+    }
 
     return (
       <div>
-        <div className="container" style={boardStyle}>
+        <div className="container"
+          style={boardStyle}
+          onClick={clickHandler}
+          onContextMenu={rightClickHandler}
+          onMouseDown={mouseDown}
+        >
+
           <CanvasBoard />
         </div>
       </div>
@@ -153,4 +157,4 @@ function mapStateToProps(state, ownProps) {
   return state
 }
 
-export default connect(mapStateToProps, {squareClicked})(makePannable(App))
+export default connect(mapStateToProps, {squareClick, squareRightClick})(makePannable(App))
