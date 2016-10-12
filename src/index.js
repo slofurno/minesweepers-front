@@ -10,7 +10,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 //store.subscribe(() => console.log(store.getState()))
 
 import App from 'containers/app'
-import { updateBoard } from 'modules/board'
+import { updateBoard, initBoard } from 'modules/board'
 
 fetch(`http://${location.host}/api/games`)
   .then(res => res.json())
@@ -27,7 +27,9 @@ function connect(game) {
 function update(action) {
   switch(action.type) {
   case "init":
-    return store.dispatch(updateBoard(action.state))
+    store.dispatch(initBoard(action.state))
+    store.dispatch(updateBoard(action.state.squares))
+    return
 
   case "update":
     return innerUpdate(action.update)
