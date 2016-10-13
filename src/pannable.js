@@ -42,6 +42,11 @@ export default function makePannable(Inner) {
     mouseMove(e) {
       if (!this.isMouseDown) { return }
 
+      if ((e.buttons & 1) === 0) {
+        this.isMouseDown = false
+        return
+      }
+
       this.handlePan(e)
     }
 
