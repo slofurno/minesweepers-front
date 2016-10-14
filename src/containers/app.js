@@ -4,32 +4,7 @@ import { connect } from 'react-redux'
 import { keys, squareClick, squareRightClick } from 'modules/board'
 import makePannable from 'pannable'
 
-const BOMB = '💣'
-const FLAG = '⚐'
 const SIZE = 24;
-
-const preventDefault = e => e.preventDefault()
-
-const Square = ({neighbors, onClick, type, revealed, flagged}) => {
-  let content = false
-  let className = 'square'
-
-  if (flagged) {
-    content = FLAG
-  } else if (revealed) {
-    className += ' revealed'
-
-    if (type == 'bomb') {
-      content = BOMB
-    } else if (neighbors > 0) {
-      content = '' + neighbors
-    }
-  }
-
-  return (
-    <div className={className} onClick={onClick} onContextMenu={onClick}>{content}</div>
-  )
-}
 
 const img = new Image();
 img.src = '/bomb.png';
@@ -118,10 +93,12 @@ class App extends Component {
 
     front.fillRect(0, 0, WIDTH, HEIGHT);
     front.drawImage(back_,-im, -jm);
+
     const clickHandler = e => {
       const dx = panX + e.nativeEvent.offsetX
       const dy = panY + e.nativeEvent.offsetY
       const pos = [dx/SIZE|0, dy/SIZE|0]
+      //fix clicks while panning board
       if (pos[0] == this.lastPos[0] && pos[1] == this.lastPos[1]) {
         squareClick(pos, e)
       }

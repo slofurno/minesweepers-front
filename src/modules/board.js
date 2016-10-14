@@ -1,39 +1,5 @@
 import { combineReducers } from 'redux'
 
-const COLS = 100
-const ROWS = 100
-
-function ENUM(n) {
-  const ret = []
-  for(let i = 0; i < n; i++){
-    ret.push(i)
-  }
-  return ret
-  //return [].slice.call('.'.repeat(n))
-}
-
-//const initial = ENUM(ROWS).map(() => ENUM(COLS))
-//
-
-function defaultSquare(row, col) {
-  return {
-    type: 'empty',
-    revealed: false,
-    row,
-    col
-  }
-}
-
-const initial = {}
-const _keys = []
-
-for(let j = 0; j < COLS; j++){
-  for(let i = 0; i < ROWS; i++){
-    initial[[i, j]] = defaultSquare(i, j)
-    _keys.push([i,j])
-  }
-}
-
 function initialState(rows, cols) {
   const xs = {}
   for(let j = 0; j < rows; j++) {
@@ -47,8 +13,6 @@ function initialState(rows, cols) {
   return xs
 }
 
-export const keys = _keys
-
 function pos(x) {
   return [x.row, x.col]
 }
@@ -58,7 +22,6 @@ export function initBoard(state) {
     type: 'BOARD_INIT',
     rows: state.rows,
     cols: state.cols
-    //squares: initialState(state.rows, state.cols)
   }
 }
 
