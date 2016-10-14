@@ -1,46 +1,45 @@
 import React, { Component, PropTypes } from 'react'
-import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
+import { Provider, connect } from 'react-redux'
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { render } from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-import rootReducer from 'modules/index'
+import Game from 'containers/game'
+import GameList from 'containers/gamelist'
+
+import rootReducer, { fetchGames } from 'modules/index'
+
 const store = createStore(rootReducer, applyMiddleware(thunk))
 //store.subscribe(() => console.log(store.getState()))
 
-import App from 'containers/app'
-import { updateBoard, initBoard } from 'modules/board'
+store.dispatch(fetchGames())
 
-fetch(`http://${location.host}/api/games`)
-  .then(res => res.json())
-  .then(xs => connect(xs[0]))
-  .catch(err => console.error(err))
-
-function connect(game) {
-  let state = {}
-  let socket = new WebSocket(`ws:///${location.host}/ws?gameid=${game}&token=123`)
-  store.dispatch({type: 'SOCKET_CONNECTED', socket})
-  socket.onmessage = e => update(JSON.parse(e.data))
-}
-
-function update(action) {
-  switch(action.type) {
-  case "init":
-    store.dispatch(initBoard(action.state))
-    store.dispatch(updateBoard(action.state.squares))
-    return
-
-  case "update":
-    return innerUpdate(action.update)
+class App extends Component {
+  render() {
+    return (
+      this.props.children
+    )
   }
 }
 
-function innerUpdate(update) {
-  switch(update.type) {
-  case "reveal":
-    return store.dispatch(updateBoard(update.squares))
+class Root extends Component {
+  render() {
+    const { store, history } = this.props
+    return (
+      <Provider store={store}>
+        <Router history={history}>
+          <Route path="/" component={App}>
+            <IndexRoute component={GameList}/>
+            <Route path="/games/:gameId" component={Game}/>
+          </Route>
+        </Router>
+      </Provider>
+    )
   }
 }
 
-render(<Provider store={store}><App/></Provider>, document.getElementById('root'))
+render(
+  <Root store={store} history={browserHistory}/>,
+  document.getElementById('root')
+)

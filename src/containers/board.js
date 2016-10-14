@@ -54,7 +54,7 @@ const back = back_.getContext('2d');
 const front_ = document.createElement('canvas');
 const front = front_.getContext('2d');
 
-class App extends Component {
+class Board extends Component {
   render() {
     const HEIGHT = (window.innerHeight / SIZE | 0) * SIZE
     const WIDTH = (window.innerWidth / SIZE | 0) * SIZE
@@ -144,4 +144,4 @@ function mapStateToProps(state, ownProps) {
   return state
 }
 
-export default connect(mapStateToProps, {squareClick, squareRightClick})(makePannable(App))
+export default connect(mapStateToProps, {squareClick, squareRightClick})(makePannable(Board))

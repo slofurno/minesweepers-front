@@ -50,6 +50,8 @@ export function squareRightClick(pos, e) {
 
 function squares(state = {}, action) {
   switch(action.type) {
+  case 'BOARD_INIT':
+    return {}
 
   case 'BOARD_UPDATE':
     return action.squares.reduce((a, c) => ({

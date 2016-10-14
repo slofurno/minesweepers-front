@@ -51,11 +51,17 @@ export default function makePannable(Inner) {
     }
 
     handlePan(e) {
+      const { onPan } = this.props
       const { panX, panY } = this.state
       const nextX = panX + e.clientX - this.start.x
       const nextY = panY + e.clientY - this.start.y
       this.setStart(e)
-      this.setState({panX: nextX, panY: nextY})
+
+      if (onPan) {
+
+      } else {
+        this.setState({panX: nextX, panY: nextY})
+      }
     }
 
     render() {
