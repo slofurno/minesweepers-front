@@ -53,7 +53,12 @@ function squares(state = {}, action) {
   case 'BOARD_INIT':
     return {}
 
-  case 'BOARD_UPDATE':
+  case 'BOARD_UPDATE': {
+    const next = Object.assign({}, state)
+    action.squares.forEach(x => next[pos(x)] = x)
+    return next
+  }
+
     return action.squares.reduce((a, c) => ({
       ...a, [pos(c)]: c
     }), state)
