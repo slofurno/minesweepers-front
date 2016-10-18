@@ -55,10 +55,19 @@ const front_ = document.createElement('canvas');
 const front = front_.getContext('2d');
 
 class Board extends Component {
+  componentDidMount() {
+
+  }
+
+  componentWillUnmount() {
+
+  }
+
   render() {
     const HEIGHT = (window.innerHeight / SIZE | 0) * SIZE
     const WIDTH = (window.innerWidth / SIZE | 0) * SIZE
-    const { board, squareClick, squareRightClick, panX, panY } = this.props
+    const { board, squareClick, squareRightClick, panned } = this.props
+    const { panX, panY } = panned
 
     const cols = WIDTH / SIZE | 0
     const rows = HEIGHT / SIZE | 0

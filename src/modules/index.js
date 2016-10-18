@@ -76,8 +76,25 @@ function games(state = [], action) {
 	}
 }
 
+export function boardPanned(panned) {
+  return {
+    type: 'BOARD_PANNED',
+    panned
+  }
+}
+
+function panned(state = {panX: 0, panY: 0}, action) {
+  switch(action.type) {
+  case 'BOARD_PANNED':
+    return action.panned
+  default:
+    return state
+  }
+}
+
 export default combineReducers({
 	games,
   board,
-  socket
+  socket,
+  panned
 })

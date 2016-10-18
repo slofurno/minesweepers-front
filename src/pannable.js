@@ -9,6 +9,9 @@ export default function makePannable(Inner) {
         panY: 0
       }
 
+      this.panX = 0
+      this.panY = 0
+
       this.setStart = this.setStart.bind(this)
       this.startTouch = this.startTouch.bind(this)
       this.mouseUp = this.mouseUp.bind(this)
@@ -52,15 +55,14 @@ export default function makePannable(Inner) {
 
     handlePan(e) {
       const { onPan } = this.props
-      const { panX, panY } = this.state
-      const nextX = panX + e.clientX - this.start.x
-      const nextY = panY + e.clientY - this.start.y
+      this.panX = this.panX + e.clientX - this.start.x
+      this.panY = this.panY + e.clientY - this.start.y
       this.setStart(e)
 
       if (onPan) {
-
+        onPan({panX: this.panX, panY: this.panY})
       } else {
-        this.setState({panX: nextX, panY: nextY})
+        this.setState({panX: this.panX, panY: this.panY})
       }
     }
 
