@@ -80,10 +80,37 @@ export function boardPanned(panned) {
   }
 }
 
+export function boardMoved(dx, dy) {
+  return {
+    type: 'BOARD_MOVED',
+    dx,
+    dy
+  }
+}
+
 function panned(state = {panX: 0, panY: 0}, action) {
   switch(action.type) {
   case 'BOARD_PANNED':
     return action.panned
+  case 'BOARD_MOVED':
+    return {panX: state.panX + action.dx, panY: state.panY + action.dy}
+  default:
+    return state
+  }
+}
+
+export function screenResized() {
+  const screen = {height: window.innerHeight, width: window.innerWidth}
+  return {
+    type: 'SCREEN_RESIZED',
+    screen
+  }
+}
+
+function screen(state = {height: window.innerHeight, width: window.innerWidth}, action) {
+  switch(action.type) {
+  case 'SCREEN_RESIZED':
+    return action.screen
   default:
     return state
   }
@@ -94,5 +121,6 @@ export default combineReducers({
   board,
   socket,
   panned,
-  user
+  user,
+  screen
 })
