@@ -1,11 +1,7 @@
 import { combineReducers } from 'redux'
 
-import board, { updateBoard, initBoard } from 'modules/board'
-
-fetchGames();
-//  .then(xs => connect(xs[0]))
-//  .catch(err => console.error(err))
-
+import board, { updateBoard, initBoard } from './board'
+import user from './user'
 
 function socket(state = null, action) {
   switch(action.type) {
@@ -18,13 +14,14 @@ function socket(state = null, action) {
 
 export function connectGame(game) {
   return (dispatch, getState) => {
-    const { socket } = getState()
+    const { socket, user } = getState()
 
     if (socket !== null) {
       socket.close()
     }
 
-    let next_socket = new WebSocket(`ws:///${location.host}/ws?gameid=${game}&token=123`)
+    const { token } = user
+    let next_socket = new WebSocket(`ws:///${location.host}/ws?gameid=${game}&token=${token}`)
     next_socket.onopen = () => dispatch({type: 'SOCKET_CONNECTED', socket: next_socket})
     next_socket.onmessage = e => dispatch(websocketMessage(JSON.parse(e.data)))
   }
@@ -54,7 +51,7 @@ function innerUpdate(dispatch, update) {
 
 export function fetchGames() {
   return (dispatch) => {
-    fetch(`http://${location.host}/api/games`)
+    fetch('/api/games')
       .then(res => res.json())
       .then(xs => dispatch(fetchGamesSuccess(xs)))
   }
@@ -96,5 +93,6 @@ export default combineReducers({
 	games,
   board,
   socket,
-  panned
+  panned,
+  user
 })

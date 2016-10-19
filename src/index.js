@@ -8,11 +8,13 @@ import thunk from 'redux-thunk'
 import Game from 'containers/game'
 import GameList from 'containers/gamelist'
 
+import { getUser } from 'modules/user'
 import rootReducer, { fetchGames } from 'modules/index'
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 //store.subscribe(() => console.log(store.getState()))
 
+store.dispatch(getUser())
 store.dispatch(fetchGames())
 
 class App extends Component {

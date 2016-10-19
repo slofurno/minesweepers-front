@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
-const filled_color = pack(200,0,0, 255)
-const empty_color = pack(55,55,55, 255)
+const filled_color = pack(100,149,237,255)
+const empty_color = pack(222,222,222,255)
 
 function pack(r,g,b,a) {
   return (a << 24) | (b << 16) | (g << 8) | r
