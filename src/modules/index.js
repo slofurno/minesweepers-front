@@ -3,6 +3,8 @@ import { combineReducers } from 'redux'
 import board, { updateBoard, initBoard } from './board'
 import user from './user'
 
+const { debounce } = require('lodash')
+
 function socket(state = null, action) {
   switch(action.type) {
   case 'SOCKET_CONNECTED':
@@ -28,7 +30,7 @@ export function connectGame(game) {
 }
 
 function websocketMessage(action) {
-  return dispatch => {
+  return (dispatch, getState) => {
     switch(action.type) {
     case "init":
       dispatch(initBoard(action.state))
@@ -36,16 +38,36 @@ function websocketMessage(action) {
       return
 
     case "update":
-      return innerUpdate(dispatch, action.update)
+      return innerUpdate(dispatch, getState, action.update)
     }
 
   }
 }
 
-function innerUpdate(dispatch, update) {
+//FIXME
+let queue = []
+
+function _doUpdateSquares(dispatch) {
+  let squares = queue.reduce((a,c) => a.concat(c))
+  queue = []
+  dispatch(updateBoard(squares))
+}
+
+const doUpdateSquares = debounce(_doUpdateSquares, 250, { maxWait: 500})
+
+function updateSquares(squares, dispatch) {
+  queue.push(squares)
+  doUpdateSquares(dispatch)
+}
+
+
+function innerUpdate(dispatch, getState, update) {
   switch(update.type) {
   case "reveal":
-    return dispatch(updateBoard(update.squares))
+    const { user } = getState()
+    return (update.player === user.id)
+      ? dispatch(updateBoard(update.squares))
+      : updateSquares(update.squares, dispatch)
   }
 }
 

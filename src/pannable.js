@@ -67,8 +67,6 @@ export default function makePannable(Inner) {
       } else {
         this.setState({panX: this.panX, panY: this.panY})
       }
-
-
     }
 
     render() {

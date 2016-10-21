@@ -52,7 +52,7 @@ class Game extends Component {
           </div>
 
         </div>
-        <Board onPan={boardPanned}/>
+        <Board onPan={e => boardMoved(e.dx, e.dy)}/>
       </div>
     )
   }
