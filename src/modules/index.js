@@ -29,21 +29,6 @@ export function connectGame(game) {
   }
 }
 
-function websocketMessage(action) {
-  return (dispatch, getState) => {
-    switch(action.type) {
-    case "init":
-      dispatch(initBoard(action.state))
-      dispatch(updateBoard(action.state.squares))
-      return
-
-    case "update":
-      return innerUpdate(dispatch, getState, action.update)
-    }
-
-  }
-}
-
 //FIXME
 let queue = []
 
@@ -60,14 +45,22 @@ function updateSquares(squares, dispatch) {
   doUpdateSquares(dispatch)
 }
 
+function websocketMessage(action) {
+  return (dispatch, getState) => {
+    switch(action.type) {
+    case "init":
+      dispatch(initBoard(action.state))
+      dispatch(updateBoard(action.state.squares))
+      return
 
-function innerUpdate(dispatch, getState, update) {
-  switch(update.type) {
-  case "reveal":
-    const { user } = getState()
-    return (update.player === user.id)
-      ? dispatch(updateBoard(update.squares))
-      : updateSquares(update.squares, dispatch)
+    case "reveal": {
+      const { user } = getState()
+      return (action.player === user.id)
+        ? dispatch(updateBoard(action.squares))
+        : updateSquares(action.squares, dispatch)
+    }
+    }
+
   }
 }
 
