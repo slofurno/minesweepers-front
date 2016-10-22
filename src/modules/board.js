@@ -59,10 +59,6 @@ function squares(state = {}, action) {
     return next
   }
 
-    return action.squares.reduce((a, c) => ({
-      ...a, [pos(c)]: c
-    }), state)
-
   default:
     return state
   }

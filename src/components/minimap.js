@@ -9,8 +9,10 @@ function pack(r,g,b,a) {
   return (a << 24) | (b << 16) | (g << 8) | r
 }
 
-function isFilled({ state } = { state: "unrevealed" }) {
-  switch(state) {
+const defaultSquare = { s: "unrevealed" }
+
+function isFilled({ s } = defaultSquare) {
+  switch(s) {
   case "flagged":
   case "bomb":
   case "empty":

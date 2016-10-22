@@ -10,23 +10,23 @@ const img = new Image();
 img.src = '/bomb.png';
 
 const defaultSquare = {
-  neighbors: 0,
-  state: "empty"
+  n: 0,
+  s: "empty"
 }
 
 const unrevealedSquare = {
-  state: "unrevealed"
+  s: "unrevealed"
 }
 
-function drawSquare(ctx, x, y, {neighbors, state} = defaultSquare) {
-  switch (state) {
+function drawSquare(ctx, x, y, {n, s} = defaultSquare) {
+  switch (s) {
   case "flagged":
     return ctx.drawImage(img, 9 * 40, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
   case "bomb":
     return ctx.drawImage(img, 10 * 40, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
   case "empty":
-    return neighbors > 0
-      ? ctx.drawImage(img, neighbors * 40, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
+    return n > 0
+      ? ctx.drawImage(img, n * 40, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
       : ctx.fillRect(x*SIZE, y*SIZE, SIZE, SIZE);
   default:
     ctx.drawImage(img, 0, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
