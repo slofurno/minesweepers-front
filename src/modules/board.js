@@ -17,18 +17,21 @@ function pos(x) {
   return [x.row, x.col]
 }
 
-export function initBoard(state) {
+export function gameStarted({squares, rows, cols, players, scores}) {
   return {
-    type: 'BOARD_INIT',
-    rows: state.rows,
-    cols: state.cols
+    type: 'GAME_INIT',
+    rows,
+    cols,
+    squares,
+    players,
+    scores
   }
 }
 
-export function updateBoard(squares) {
+export function updateBoard(updates) {
   return {
     type: 'BOARD_UPDATE',
-    squares
+    updates
   }
 }
 
@@ -50,12 +53,17 @@ export function squareRightClick(pos, e) {
 
 function squares(state = {}, action) {
   switch(action.type) {
-  case 'BOARD_INIT':
-    return {}
+  case 'GAME_INIT': {
+    const squares = {}
+    action.squares.forEach(x => squares[pos(x)] = x)
+    return squares
+  }
 
   case 'BOARD_UPDATE': {
     const next = Object.assign({}, state)
-    action.squares.forEach(x => next[pos(x)] = x)
+    action.updates.forEach(update =>
+      update.squares.forEach(x => next[pos(x)] = x)
+    )
     return next
   }
 
@@ -67,7 +75,7 @@ function squares(state = {}, action) {
 
 function rows(state = 0, action) {
   switch(action.type) {
-  case 'BOARD_INIT':
+  case 'GAME_INIT':
     return action.rows
   default:
     return state
@@ -77,7 +85,7 @@ function rows(state = 0, action) {
 
 function cols(state = 0, action) {
   switch(action.type) {
-  case 'BOARD_INIT':
+  case 'GAME_INIT':
     return action.cols
   default:
     return state

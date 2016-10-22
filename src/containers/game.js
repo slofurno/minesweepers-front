@@ -4,6 +4,7 @@ import Board from 'containers/board'
 import Minimap from 'components/minimap'
 
 import { connectGame, boardPanned, boardMoved } from 'modules'
+import { getHighScores } from 'modules/scores'
 
 function connectSocket(props) {
   const { gameId, connectGame } = props
@@ -26,11 +27,12 @@ class Game extends Component {
   }
 
   render() {
-    const { boardPanned, boardMoved, panned, board, screen } = this.props
+    const { boardPanned, boardMoved, panned, board, screen, highscores } = this.props
     const { squares } = board
     const { panX, panY } = panned
-    const width = 200
-    const height = 200
+    const width = 240
+    const height = 240
+    const hwidth = width / 2
 
     const offsetX = (panX / 24) | 0
     const offsetY = (panY / 24) | 0
@@ -39,8 +41,8 @@ class Game extends Component {
         <div className="overlay">
           <div className="opaque">
             <Minimap
-              offsetX={offsetX-100}
-              offsetY={offsetY-100}
+              offsetX={offsetX-hwidth}
+              offsetY={offsetY-hwidth}
               width={width}
               height={height}
               screen={screen}
@@ -50,6 +52,11 @@ class Game extends Component {
               onPan={e => false && boardMoved(e.dx*24, e.dy*24)}
             />
           </div>
+
+        <ul>
+          { highscores.map(({id, player, score}) =>
+              <li key={id}> { player + " : " + score } </li> ) }
+        </ul>
 
         </div>
         <Board onPan={e => boardMoved(e.dx, e.dy)}/>
@@ -62,7 +69,8 @@ function mapStateToProps(state, ownProps) {
   const { gameId } = ownProps.params
   return {
     ...state,
-     gameId
+    gameId,
+    highscores: getHighScores(state)
   }
 }
 

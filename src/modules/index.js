@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux'
 
-import board, { updateBoard, initBoard } from './board'
+import board, { updateBoard, gameStarted } from './board'
 import user from './user'
+import players, { setPlayerNames, setPlayerName }  from './players'
+import scores from './scores'
 
 const { debounce } = require('lodash')
 
@@ -33,7 +35,7 @@ export function connectGame(game) {
 let queue = []
 
 function _doUpdateSquares(dispatch) {
-  let squares = queue.reduce((a,c) => a.concat(c))
+  let squares = queue.reduce((a,c) => a.concat(c), [])
   queue = []
   dispatch(updateBoard(squares))
 }
@@ -49,16 +51,18 @@ function websocketMessage(action) {
   return (dispatch, getState) => {
     switch(action.type) {
     case "init":
-      dispatch(initBoard(action.state))
-      dispatch(updateBoard(action.state.squares))
+      dispatch(gameStarted(action.state))
       return
 
     case "reveal": {
       const { user } = getState()
       return (action.player === user.id)
-        ? dispatch(updateBoard(action.squares))
-        : updateSquares(action.squares, dispatch)
+        ? dispatch(updateBoard([action]))
+        : updateSquares(action, dispatch)
     }
+
+    case "player":
+      dispatch(setPlayerName(action))
     }
 
   }
@@ -137,5 +141,7 @@ export default combineReducers({
   socket,
   panned,
   user,
-  screen
+  screen,
+  players,
+  scores
 })
