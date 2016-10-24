@@ -3,7 +3,6 @@ import makePannable from 'pannable'
 
 const filled_color = pack(100,149,237,255)
 const empty_color = pack(222,222,222,255)
-const SIZE = 24
 
 function pack(r,g,b,a) {
   return (a << 24) | (b << 16) | (g << 8) | r
@@ -47,7 +46,7 @@ const Minimap = React.createClass({
   },
 
   renderMap(props) {
-    const { width, height, offsetX, offsetY, xs, screen } = props
+    const { width, height, offsetX, offsetY, xs, screen, SIZE } = props
 
     const inner_width = (screen.width/SIZE) | 0
     const inner_height = (screen.height/SIZE) | 0

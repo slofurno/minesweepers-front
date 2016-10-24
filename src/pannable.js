@@ -39,6 +39,7 @@ export default function makePannable(Inner) {
     }
 
     touchMove(e) {
+      e.preventDefault()
       this.handlePan(e.touches[0])
     }
 

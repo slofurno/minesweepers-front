@@ -92,8 +92,18 @@ function cols(state = 0, action) {
   }
 }
 
+function squareSize(state = window.innerWidth > 600 ? 24 : 36, action) {
+  switch(action.type) {
+  case 'SCREEN_RESIZED':
+    return action.screen.width > 600 ? 24 : 36
+  default:
+    return state
+  }
+}
+
 export default combineReducers({
   rows,
   cols,
-  squares
+  squares,
+  squareSize
 })

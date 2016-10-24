@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import { keys, squareClick, squareRightClick } from 'modules/board'
 import makePannable from 'pannable'
 
-const SIZE = 24;
-
 const img = new Image();
 img.src = '/bomb.png';
 
@@ -18,7 +16,7 @@ const unrevealedSquare = {
   s: "unrevealed"
 }
 
-function drawSquare(ctx, x, y, {n, s} = defaultSquare) {
+function drawSquare(ctx, x, y, SIZE, {n, s} = defaultSquare) {
   switch (s) {
   case "flagged":
     return ctx.drawImage(img, 9 * 40, 0, 40, 40, x * SIZE, y * SIZE, SIZE, SIZE)
@@ -64,11 +62,12 @@ class Board extends Component {
   }
 
   render() {
-    const HEIGHT = (window.innerHeight / SIZE | 0) * SIZE
-    const WIDTH = (window.innerWidth / SIZE | 0) * SIZE
     const { board, squareClick, squareRightClick, panned } = this.props
     const { panX, panY } = panned
+    const SIZE = board.squareSize
 
+    const HEIGHT = ((window.innerHeight - 30) / SIZE | 0) * SIZE
+    const WIDTH = (window.innerWidth  / SIZE | 0) * SIZE
     const cols = WIDTH / SIZE | 0
     const rows = HEIGHT / SIZE | 0
 
@@ -92,10 +91,10 @@ class Board extends Component {
         const col = i + i0
         const row = j + j0
         if (row >= board.rows || row < 0 || col >= board.cols || col < 0) {
-          drawSquare(back, i, j, defaultSquare)
+          drawSquare(back, i, j, SIZE, defaultSquare)
         } else {
           const square = board.squares[[i + i0, j + j0]] || unrevealedSquare
-          drawSquare(back, i, j, square)
+          drawSquare(back, i, j, SIZE, square)
         }
       }
     }

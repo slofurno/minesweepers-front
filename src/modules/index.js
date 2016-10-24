@@ -40,7 +40,7 @@ function _doUpdateSquares(dispatch) {
   dispatch(updateBoard(squares))
 }
 
-const doUpdateSquares = debounce(_doUpdateSquares, 250, { maxWait: 500})
+const doUpdateSquares = debounce(_doUpdateSquares, 1000, { maxWait: 2000})
 
 function updateSquares(squares, dispatch) {
   queue.push(squares)
@@ -135,6 +135,21 @@ function screen(state = {height: window.innerHeight, width: window.innerWidth}, 
   }
 }
 
+export function toggleMinimap() {
+  return {
+    type: 'MINIMAP_TOGGLED'
+  }
+}
+
+function minimap(state = false, action) {
+  switch(action.type) {
+  case 'MINIMAP_TOGGLED':
+    return !state
+  default:
+    return state
+  }
+}
+
 export default combineReducers({
 	games,
   board,
@@ -143,5 +158,6 @@ export default combineReducers({
   user,
   screen,
   players,
-  scores
+  scores,
+  minimap
 })

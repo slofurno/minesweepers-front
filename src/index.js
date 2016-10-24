@@ -9,7 +9,7 @@ import Game from 'containers/game'
 import GameList from 'containers/gamelist'
 
 import { getUser } from 'modules/user'
-import rootReducer, { fetchGames, screenResized } from 'modules/index'
+import rootReducer, { fetchGames, screenResized, toggleMinimap } from 'modules/index'
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 //store.subscribe(() => console.log(store.getState()))
@@ -17,6 +17,10 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 store.dispatch(getUser())
 store.dispatch(fetchGames())
 window.onresize = () => store.dispatch(screenResized())
+
+if (window.innerWidth >= 700) {
+  store.dispatch(toggleMinimap())
+}
 
 class App extends Component {
   render() {
