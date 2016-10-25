@@ -62,7 +62,7 @@ class Game extends Component {
                 onPan={e => false && boardMoved(e.dx*squareSize, e.dy*squareSize)}
                 SIZE={squareSize}
               />
-              <ul>
+              <ul className="unselectable">
                 { highscores.map(({id, player, score}) =>
                     <li key={id}> { player + " : " + score } </li> ) }
               </ul>

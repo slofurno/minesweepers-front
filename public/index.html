@@ -101,11 +101,13 @@
     height: 30px;
     background: gray;
     color: gainsboro;
+    align-items: center;
   }
 
   .game-head-left {
     display: flex;
     flex: 1;
+    justify-content: center;
   }
 
   .game-head-right {
@@ -115,6 +117,13 @@
   .game-content {
     position: relative;
 
+  }
+
+  .unselectable {
+    -webkit-user-select: none; /* Safari, Chrome */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE */
+    user-select: none; /* CSS3 */
   }
 </style>
 </head>
