@@ -53,15 +53,22 @@ const front_ = document.createElement('canvas');
 const front = front_.getContext('2d');
 
 class Board extends Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props)
 
+    this.draw = this.draw.bind(this)
+  }
+
+  componentDidMount() {
+    this.mounted = true
+    requestAnimationFrame(this.draw)
   }
 
   componentWillUnmount() {
-
+    this.mounted = false
   }
 
-  render() {
+  draw() {
     const { board, squareClick, squareRightClick, panned } = this.props
     const { panX, panY } = panned
     const SIZE = board.squareSize
@@ -73,7 +80,6 @@ class Board extends Component {
 
     const jm = panY % SIZE
     const im = panX % SIZE
-
     const j0 = panY / SIZE | 0
     const i0 = panX / SIZE | 0
 
@@ -101,6 +107,19 @@ class Board extends Component {
 
     front.fillRect(0, 0, WIDTH, HEIGHT);
     front.drawImage(back_,-im, -jm);
+
+    if (this.mounted) {
+      requestAnimationFrame(this.draw)
+    }
+  }
+
+  render() {
+    const { board, squareClick, squareRightClick, panned } = this.props
+    const { panX, panY } = panned
+    const SIZE = board.squareSize
+
+    const HEIGHT = ((window.innerHeight - 30) / SIZE | 0) * SIZE
+    const WIDTH = (window.innerWidth  / SIZE | 0) * SIZE
 
     const clickHandler = e => {
       const dx = panX + e.nativeEvent.offsetX

@@ -40,7 +40,7 @@ function _doUpdateSquares(dispatch) {
   dispatch(updateBoard(squares))
 }
 
-const doUpdateSquares = debounce(_doUpdateSquares, 1000, { maxWait: 2000})
+const doUpdateSquares = debounce(_doUpdateSquares, 500, { maxWait: 1000})
 
 function updateSquares(squares, dispatch) {
   queue.push(squares)
