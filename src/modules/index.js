@@ -68,6 +68,28 @@ function websocketMessage(action) {
   }
 }
 
+function createGameSuccess(game) {
+  return {
+    type: "CREATE_GAME_SUCCESS",
+    game
+  }
+}
+
+export function createGame() {
+  return (dispatch) => {
+    fetch('/api/games', {
+      method: 'POST',
+      body: JSON.stringify({
+        rows: 1000,
+        cols: 1000,
+        bots: 10
+      }),
+    })
+    .then(res => res.json())
+    .then(id => dispatch(createGameSuccess(id)))
+  }
+}
+
 export function fetchGames() {
   return (dispatch) => {
     fetch('/api/games')
@@ -87,6 +109,8 @@ function games(state = [], action) {
 	switch(action.type) {
 	case 'FETCH_GAMES_SUCCESS':
 		return action.games
+  case 'CREATE_GAME_SUCCESS':
+    return state.concat(action.game)
 	default:
 		return state
 	}
